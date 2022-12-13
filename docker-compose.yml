@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  app:
+    build: .
+    ports:
+      - "5001:5001"
+    volumes:
+      - .:/app
+    environment:
+      DATABASE: "oreilly"
+      DB_USER: "oreilly"
+      DB_PASSWORD: "hunter2"
+      DB_HOST: "db"
+      DB_PORT: "5432"
+    command: python /app/src/app.py
+    depends_on:
+      - db
+  db:
+    image: registry.hub.docker.com/caedus41/oreilly-cloud-engineer-postgres
+    environment:
+      POSTGRES_USER: "oreilly"
+      POSTGRES_PASSWORD: "hunter2"
+      POSTGRES_DB: "oreilly"
+    ports:
+      - "5432:5432"

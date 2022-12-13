@@ -1,6 +1,8 @@
 import flask
 import isbnlib
 import psycopg2
+from os import getenv
+
 
 app = flask.Flask("BooksAPI")
 
@@ -8,10 +10,17 @@ app = flask.Flask("BooksAPI")
 from psycopg2 import pool
 
 # Initiate DB Connection to PostGres DB
-DATABASE_URL = "postgres://oreilly:hunter2@localhost:5432/oreilly"
+DATABASE = getenv('DATABASE', 'oreilly')
+DB_USER = getenv('DB_USER', 'oreilly')
+DB_PASSWORD = getenv('DB_PASSWORD', 'hunter2')
+DB_HOST = getenv('DB_HOST', 'localhost')
+DB_PORT = getenv('DB_PORT', 5432)
+
+# Create a connection to the database
+DATABASE_URL = f"dbname={DATABASE} user={DB_USER} password={DB_PASSWORD} host={DB_HOST} port={DB_PORT}"
 
 # Create a connection pool
-conn_pool = pool.ThreadedConnectionPool(1, 10, DATABASE_URL)
+conn_pool = pool.ThreadedConnectionPool(1, 20, DATABASE_URL)
 
 
 # Define the GET /books/title/:title endpoint
